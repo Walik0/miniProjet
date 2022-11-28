@@ -2,43 +2,40 @@ import customClass.*;
 
 //Duflos Matthias I2-B
 
+
+//TO DO 
+/*
+ * selection de la positon du bateau
+ * 
+ */
+
 public class Bateau
 {
         int positionX;
         int positionY;
-        char typeBateau;
         boolean verticale;
+        int longueur;
 
         public Bateau()
         {
 
         }
 
-        public static String typeBateau(int type)
+        public Bateau(int longueur)
         {
+            //crée un bateau avec un longueur pré definie
 
-            String typeBateau = "";
+            Bateau bateau = new Bateau();
 
-            switch(type)
-            {
-                case 1:
-                typeBateau = "*";
-                break;
+            Ecran.afficher("quelle est la position X ?: ");
+            bateau.positionX = Clavier.saisirInt();
 
-                case 2:
-                typeBateau = "°";
-                break;
+            Ecran.afficher("quelle est la postition Y ?: ");
+            bateau.positionY = Clavier.saisirInt();
 
-                case 3:
-                typeBateau = "&";
-                break;
+            bateau.verticale = orientation();
 
-                case 4:
-                typeBateau = "%";
-                break;
-            }
-
-            return typeBateau;
+            bateau.longueur = longueur;
         }
 
         public static Bateau placagBateau(Bateau bateau)
@@ -48,22 +45,21 @@ public class Bateau
             return bateau;
         }
     
+
+        public class Tir
+        {
+            int X;
+            int Y;
+            boolean hit;
+        }
     public static void main(String args [])
     {
-        Bateau bateau = new Bateau();
-        affichageGrille();
-        
+        initialisation();
     }
-
-    public static void initialisation()
+    public static Bateau Bateauini(int longueur)
     {
-        Bateau bateauJoueur1 = new Bateau();
+        //crée un bateau avec un longueur pré definie et l'affect a un Bateau
 
-        bateauJoueur1 = saisiBateau();
-    }
-
-    public static Bateau saisiBateau()
-    {
         Bateau bateau = new Bateau();
 
         Ecran.afficher("quelle est la position X ?: ");
@@ -72,34 +68,53 @@ public class Bateau
         Ecran.afficher("quelle est la postition Y ?: ");
         bateau.positionY = Clavier.saisirInt();
 
-        Ecran.afficher("quelle est le type du bateu ?: ");
-        bateau.typeBateau = Clavier.saisirChar();
-
         bateau.verticale = orientation();
+
+        bateau.longueur = longueur;
+
         return bateau;
+    }
+
+    public static void initialisation()
+    {
+        Bateau torpilleurJ1 = new Bateau();
+        torpilleurJ1 = Bateauini(2);
+
+        //Bateau sousMarinsJ1_1 = new Bateau(3);
+        //Bateau sousMarinsJ1_2 = new Bateau(3);
+
+        //Bateau croiseurJ1 = new Bateau(4);
+
+        //Bateau port_Avion = new Bateau(5);
+
+        affichageGrille(torpilleurJ1);
     }
 
     public static boolean orientation()
     {
         boolean orientation = true;
 
-        return orientation;
+        return true;
     }
 
-    public static void affichageGrille()
+
+    //to do ne pas afficher un bateau qui est coulé
+    public static void affichageGrille(Bateau torpilleurJ1)
     {
         //affiche une grille est change la case si il sagit d'un bateau
 
-        for (int X = 0; X < 10; X++) 
+        for (int Y = 1; Y < 10; Y++) 
         {
-            for (int Y = 0; Y < 10; Y++) 
+            Ecran.afficher(Y, " ");
+            for (int X = 1; X < 10; X++) 
             {
-                if(estPosBateau(X,Y) && X < 10 && Y < 10)
+                //Ecran.afficher(X);
+                if(estPosBateau(X,Y,torpilleurJ1))
                 {
-                    Ecran.afficher("[*]");
+                    Ecran.afficher("0 ");
                 }else
                 {
-                    Ecran.afficher("[ ]");
+                    Ecran.afficher("~ ");
                 }    
             } 
             Ecran.afficherln();   
@@ -107,16 +122,70 @@ public class Bateau
     }
 
 
-    public static boolean estPosBateau(int X,int Y)
+    public static boolean estPosBateau(int X,int Y,Bateau bateau)
     {
         //retourne vrai si X et Y sont des coordonée de bateau
         boolean estPosBateau = false;
-
-        if(X == 4 && Y == )
+        //Ecran.afficher(bateau.positionX,bateau.positionY);
+        //Ecran.afficher(bateau.verticale);
+        if(X == bateau.positionX && Y == bateau.positionY)
         {
-            return true;
+            if(bateau.verticale == true) 
+            {
+                //Ecran.afficher(bateau.longueur);
+                /* 
+                if(X == bateau.positionX && Y < (bateau.positionY + bateau.longueur) - bateau.positionY)
+                {
+
+                    return true;
+                }
+                */
+                
+                return true;
+            }else
+            {
+                /* 
+                while(Y == bateau.positionY && X < (bateau.positionX + bateau.longueur) - bateau.positionX)
+                {
+                    return true;
+                }
+                */
+            }
+        }else
+        {
+            if(X == bateau.positionX && Y > bateau.positionY && Y < bateau.positionY + bateau.longueur)
+            {
+                if(bateau.verticale == true) 
+                {
+                    //Ecran.afficher(bateau.longueur);
+                    while(X == bateau.positionX && Y > (bateau.positionY + bateau.longueur) - bateau.positionY)
+                    {
+                        return true;
+                    }   
+                }
+
+            }
         }
 
         return estPosBateau;
+    }
+
+    public static int positionXAllBoat()
+    {
+        int positionX = 0;
+
+        return positionX;
+    }
+
+    public static int colision(Bateau bateau, int tirX, int tirY)
+    {
+        int colision = 0;
+
+        if(tirX == bateau.positionX && tirY == bateau.positionY)
+        {
+            colision = 1;
+        }
+
+        return colision;
     }
 }
