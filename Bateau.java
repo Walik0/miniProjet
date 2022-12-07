@@ -6,6 +6,15 @@ public class Bateau
     int positionY;
     int longueur;
 
+    boolean sunk;
+
+    public class Tir
+    {
+        int X;
+        int Y;
+        boolean hit;
+    }
+
 
     public static Bateau Bateauini(int longueur)
     {
@@ -20,6 +29,7 @@ public class Bateau
         bateau.positionY = Clavier.saisirInt();
 
         bateau.longueur = longueur;
+        bateau.sunk = false;
 
         return bateau;
     }
@@ -33,6 +43,34 @@ public class Bateau
 
         affichageGrille(torpilleurJ1,sousMarinsJ1_1);
 
+        while(endGame(torpilleurJ1, sousMarinsJ1_1) == false)
+        {
+            nextRound();
+            affichageGrille(torpilleurJ1, sousMarinsJ1_1);
+
+            
+
+        }
+    }
+
+    public static boolean endGame(Bateau torpilleurJ1, Bateau sousMarinsJ1_1)
+    {
+        if(torpilleurJ1.sunk = true && sousMarinsJ1_1.sunk == true)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean tir(int X, int Y)
+    {
+        return false;
+    }
+
+    public static void nextRound()
+    {
+        int X = Clavier.saisirInt();
+        int Y = Clavier.saisirInt();
 
     }
 
@@ -56,12 +94,12 @@ public class Bateau
             for (int X = 0; X < 10; X++) 
             {
                 valeurCase = valeurCase(X, Y,torpilleurJ1, sousMarinsJ1_1);
-
                 affichageCase(valeurCase);    
             } 
             Ecran.afficherln();   
         }
     }
+
 
     public static void affichageCase(int valeurCase)
     {
@@ -78,9 +116,7 @@ public class Bateau
     }
 
     public static int estPosBateau(int X,int Y,Bateau bateau)
-    {
-        int estPosBateau = 0;
-           
+    {      
             if(X == bateau.positionX && Y == bateau.positionY)
             {   
                     return 1;  
@@ -88,7 +124,6 @@ public class Bateau
             {
                 if(X == bateau.positionX && Y > bateau.positionY && Y < bateau.positionY + bateau.longueur)
                 {
-                        //Ecran.afficher(bateau.longueur);
                     if(X == bateau.positionX && Y > (bateau.positionY + bateau.longueur) - bateau.positionY)
                     {
                             return 1;
