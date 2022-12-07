@@ -1,61 +1,12 @@
 import customClass.*;
 
-//Duflos Matthias I2-B
-
-
-//TO DO 
-/*
- * selection de la positon du bateau
- * 
- */
-
 public class Bateau
 {
-        int positionX;
-        int positionY;
-        boolean verticale;
-        int longueur;
-
-        public Bateau()
-        {
-
-        }
-
-        public Bateau(int longueur)
-        {
-            //crée un bateau avec un longueur pré definie
-
-            Bateau bateau = new Bateau();
-
-            Ecran.afficher("quelle est la position X ?: ");
-            bateau.positionX = Clavier.saisirInt();
-
-            Ecran.afficher("quelle est la postition Y ?: ");
-            bateau.positionY = Clavier.saisirInt();
-
-            bateau.verticale = orientation();
-
-            bateau.longueur = longueur;
-        }
-
-        public static Bateau placagBateau(Bateau bateau)
-        {
+    int positionX;
+    int positionY;
+    int longueur;
 
 
-            return bateau;
-        }
-    
-
-        public class Tir
-        {
-            int X;
-            int Y;
-            boolean hit;
-        }
-    public static void main(String args [])
-    {
-        initialisation();
-    }
     public static Bateau Bateauini(int longueur)
     {
         //crée un bateau avec un longueur pré definie et l'affect a un Bateau
@@ -68,124 +19,83 @@ public class Bateau
         Ecran.afficher("quelle est la postition Y ?: ");
         bateau.positionY = Clavier.saisirInt();
 
-        bateau.verticale = orientation();
-
         bateau.longueur = longueur;
 
         return bateau;
     }
-
-    public static void initialisation()
+    public static void main(String args [])
     {
         Bateau torpilleurJ1 = new Bateau();
         torpilleurJ1 = Bateauini(2);
 
-        //Bateau sousMarinsJ1_1 = new Bateau(3);
-        //Bateau sousMarinsJ1_2 = new Bateau(3);
+        Bateau sousMarinsJ1_1 = new Bateau();
+        sousMarinsJ1_1 = Bateauini(3);
 
-        //Bateau croiseurJ1 = new Bateau(4);
+        affichageGrille(torpilleurJ1,sousMarinsJ1_1);
 
-        //Bateau port_Avion = new Bateau(5);
 
-        affichageGrille(torpilleurJ1);
     }
 
-    public static boolean orientation()
+    public static int valeurCase(int X, int Y, Bateau torpilleurJ1, Bateau sousMarinsJ1_1)
     {
-        boolean orientation = true;
-
-        return true;
-    }
-
-
-    //to do ne pas afficher un bateau qui est coulé
-    public static void affichageGrille(Bateau torpilleurJ1)
-    {
-        //affiche une grille est change la case si il sagit d'un bateau
-
-        for (int Y = 1; Y < 10; Y++) 
+        if(estPosBateau(X, Y, torpilleurJ1) == 1 || estPosBateau(X, Y, sousMarinsJ1_1) == 1)
         {
-            Ecran.afficher(Y, " ");
-            for (int X = 1; X < 10; X++) 
+            return 1;
+        }
+
+        return 0;        
+    }
+
+    public static void affichageGrille(Bateau torpilleurJ1,Bateau sousMarinsJ1_1)
+    {
+        int valeurCase;
+
+        boolean estPosBateau;
+        for (int Y = 0; Y < 10; Y++)
+        {
+            for (int X = 0; X < 10; X++) 
             {
-                //Ecran.afficher(X);
-                if(estPosBateau(X,Y,torpilleurJ1))
-                {
-                    Ecran.afficher("0 ");
-                }else
-                {
-                    Ecran.afficher("~ ");
-                }    
+                valeurCase = valeurCase(X, Y,torpilleurJ1, sousMarinsJ1_1);
+
+                affichageCase(valeurCase);    
             } 
             Ecran.afficherln();   
         }
     }
 
-
-    public static boolean estPosBateau(int X,int Y,Bateau bateau)
+    public static void affichageCase(int valeurCase)
     {
-        //retourne vrai si X et Y sont des coordonée de bateau
-        boolean estPosBateau = false;
-        //Ecran.afficher(bateau.positionX,bateau.positionY);
-        //Ecran.afficher(bateau.verticale);
-        if(X == bateau.positionX && Y == bateau.positionY)
+        switch(valeurCase)
         {
-            if(bateau.verticale == true) 
-            {
-                //Ecran.afficher(bateau.longueur);
-                /* 
-                if(X == bateau.positionX && Y < (bateau.positionY + bateau.longueur) - bateau.positionY)
-                {
+            case 0:
+                Ecran.afficher(" ~ ");
+            break;
 
-                    return true;
-                }
-                */
-                
-                return true;
+            case 1:
+                Ecran.afficher(" 0 ");
+            break;
+        }
+    }
+
+    public static int estPosBateau(int X,int Y,Bateau bateau)
+    {
+        int estPosBateau = 0;
+           
+            if(X == bateau.positionX && Y == bateau.positionY)
+            {   
+                    return 1;  
             }else
             {
-                /* 
-                while(Y == bateau.positionY && X < (bateau.positionX + bateau.longueur) - bateau.positionX)
+                if(X == bateau.positionX && Y > bateau.positionY && Y < bateau.positionY + bateau.longueur)
                 {
-                    return true;
-                }
-                */
-            }
-        }else
-        {
-            if(X == bateau.positionX && Y > bateau.positionY && Y < bateau.positionY + bateau.longueur)
-            {
-                if(bateau.verticale == true) 
-                {
-                    //Ecran.afficher(bateau.longueur);
-                    while(X == bateau.positionX && Y > (bateau.positionY + bateau.longueur) - bateau.positionY)
+                        //Ecran.afficher(bateau.longueur);
+                    if(X == bateau.positionX && Y > (bateau.positionY + bateau.longueur) - bateau.positionY)
                     {
-                        return true;
+                            return 1;
                     }   
                 }
-
             }
-        }
-
-        return estPosBateau;
-    }
-
-    public static int positionXAllBoat()
-    {
-        int positionX = 0;
-
-        return positionX;
-    }
-
-    public static int colision(Bateau bateau, int tirX, int tirY)
-    {
-        int colision = 0;
-
-        if(tirX == bateau.positionX && tirY == bateau.positionY)
-        {
-            colision = 1;
-        }
-
-        return colision;
+        
+        return 0;
     }
 }
