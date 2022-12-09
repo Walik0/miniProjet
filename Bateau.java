@@ -1,5 +1,13 @@
 import customClass.*;
 
+
+class Tir
+{
+    int X;
+    int Y;
+    boolean hit;
+}
+
 public class Bateau
 {
     int positionX;
@@ -8,12 +16,13 @@ public class Bateau
 
     boolean sunk;
 
+    /* 
     public class Tir
     {
         int X;
         int Y;
         boolean hit;
-    }
+    }*/
 
 
     public static Bateau Bateauini(int longueur)
@@ -22,11 +31,23 @@ public class Bateau
 
         Bateau bateau = new Bateau();
 
-        Ecran.afficher("quelle est la position X ?: ");
-        bateau.positionX = Clavier.saisirInt();
+        switch(longueur)
+        {
+            case 2:
+            Ecran.afficher("quelle est la position X (torpilleur) ?: ");
+            bateau.positionX = Clavier.saisirInt();
 
-        Ecran.afficher("quelle est la postition Y ?: ");
-        bateau.positionY = Clavier.saisirInt();
+            Ecran.afficher("quelle est la postition Y (torpilleur) ?: ");
+            bateau.positionY = Clavier.saisirInt();
+            break;
+
+            case 3:
+            Ecran.afficher("quelle est la postition X (sousMarins) ?: ");
+            bateau.positionY = Clavier.saisirInt();
+
+            Ecran.afficher("quelle est la postition Y (sousMarins) ?: ");
+            bateau.positionY = Clavier.saisirInt();
+        }
 
         bateau.longueur = longueur;
         bateau.sunk = false;
@@ -41,17 +62,77 @@ public class Bateau
         Bateau sousMarinsJ1_1 = new Bateau();
         sousMarinsJ1_1 = Bateauini(3);
 
+        Tir tir = new Tir();
+
         affichageGrille(torpilleurJ1,sousMarinsJ1_1);
 
         while(endGame(torpilleurJ1, sousMarinsJ1_1) == false)
         {
-            nextRound();
-            affichageGrille(torpilleurJ1, sousMarinsJ1_1);
+            tir = saisieTir();
+            affichageJeux(torpilleurJ1, sousMarinsJ1_1,tir);            
 
             
 
         }
     }
+
+    public static Tir saisieTir()
+    {
+        Tir tir = new Tir();
+
+
+        Ecran.afficher("ou voulez vous tiré en X: ");
+        tir.X = Clavier.saisirInt();
+        Ecran.afficher("ou voulez vous tiré en Y: ");
+        tir.Y = Clavier.saisirInt();
+
+        tir.hit = false;
+
+        return tir;
+    }
+
+    public static void affichageJeux(Bateau torpilleurJ1, Bateau sousMarinsJ1_1,Tir tir)
+    {
+        int valeurCase;
+        int nbTir = 0;
+        int nbTirPr = 0;
+
+        boolean estPosBateau;
+        for (int Y = 0; Y < 10; Y++)
+        {
+            for (int X = 0; X < 10; X++) 
+            {
+                valeurCase = valeurCase(X, Y,torpilleurJ1, sousMarinsJ1_1);
+
+                    if(valeurCase(X,Y,torpilleurJ1,sousMarinsJ1_1) == 1 && tir.X == X && tir.Y == Y)
+                    {
+                        if(nbTir >= nbTirPr)
+                        {
+                            nbTir = nbTir +1;
+                            //nbTirPr = nbTir;
+                            valeurCase = 0;
+                        }                          
+                    }
+                    else
+                    {
+                        if(valeurCase(X,Y,torpilleurJ1,sousMarinsJ1_1) == 1 && tir.X != X && tir.Y != Y && nbTir > nbTirPr)
+                        {
+                            valeurCase = 0;
+                            
+
+                            
+                            
+                        }
+                    }
+                
+                affichageCase(valeurCase);    
+            } 
+            Ecran.afficherln();   
+        }
+    }
+ 
+
+
 
     public static boolean endGame(Bateau torpilleurJ1, Bateau sousMarinsJ1_1)
     {
